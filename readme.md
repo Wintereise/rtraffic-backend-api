@@ -2,7 +2,7 @@
 
 Playground for rTraffic - API development
 
-Code writing requirements
+Code writing requirements.
 ---
 
 Language of choice - PHP (>=5.6.x), Java (latest JRE)
