@@ -1,6 +1,8 @@
 Things that you're expected to learn this week
 ---
 **Please note -- when I say _learn_, I expect you to trial it _on your own system_ and gain a proficiency level where you are comfortable talking about the concepts, and are able to perform basic implementations using them.**
+
+##Generic
 1. Learn `markdown` -- this file is written using it See [this.](http://www.markdowntutorial.com/)
 2. Basic PHP -- learn the concepts of [Unit Testing](https://jtreminio.com/2013/03/unit-testing-tutorial-introduction-to-phpunit/)
 
