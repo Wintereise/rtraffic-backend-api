@@ -50,8 +50,8 @@ class locationController extends Controller
         else
             return response()->json(
                 [
-                'status' => 400,
-                'message' => 'You\'ve sent a malformed HTTP request.'
+                    'status' => 400,
+                    'message' => 'You\'ve sent a malformed HTTP request.'
                 ]
             );
     }
