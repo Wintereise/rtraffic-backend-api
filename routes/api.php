@@ -17,18 +17,23 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::post('/insertLocation', 'locationController@insert');
+Route::group(['prefix' => 'v1'], function ()
+{
+    Route::post('point', 'locationController@insert');
 
-Route::get('/v1/test', function(Request $request){
-    return "Hello world!";
-});
+    Route::get('point/{id}', 'locationController@fetch');
 
-Route::get('/v1/markup', function(Request $request){
-    return json_encode([
-        'name' => 'Some Area A',
-        'from_long' => -122,
-        'to_long' => -122,
-        'from_lat' => 37,
-        'to_lat' => 37
-    ]);
+    Route::get('test', function(Request $request){
+        return "Hello world!";
+    });
+
+    Route::get('markup', function(Request $request){
+        return json_encode([
+            'name' => 'Some Area A',
+            'from_long' => -122,
+            'to_long' => -122,
+            'from_lat' => 37,
+            'to_lat' => 37
+        ]);
+    });
 });

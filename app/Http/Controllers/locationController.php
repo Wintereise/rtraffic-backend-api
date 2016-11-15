@@ -25,4 +25,34 @@ class locationController extends Controller
             'message' => 'Record was successfully inserted.'
         ]);
     }
+
+    public function fetch (Request $request, $id)
+    {
+        if(is_numeric($id))
+        {
+            $data = Location::where('id', $id)
+                    ->get()
+                    ->first();
+            if($data)
+            {
+                var_dump($data);
+            }
+            else
+            {
+                return response()->json(
+                    [
+                        'status' => 404,
+                        'message' => 'The record you\'re looking for could not be found.'
+                    ]
+                );
+            }
+        }
+        else
+            return response()->json(
+                [
+                'status' => 400,
+                'message' => 'You\'ve sent a malformed HTTP request.'
+                ]
+            );
+    }
 }
