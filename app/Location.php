@@ -9,7 +9,7 @@ class Location extends Model
 {
     protected $table = 'locations';
 
-    public static function findByLongLat ($long, $lat, $radius, $distance_unit)
+    public static function findByLongLat ($lat, $long, $radius, $distance_unit)
     {
         return DB::select(DB::raw('
                     SELECT z.zip,
