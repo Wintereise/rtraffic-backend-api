@@ -26,7 +26,7 @@ class locationController extends Controller
         ]);
     }
 
-    public function geomFetch (Request $request, $long, $lat)
+    public function geomFetch (Request $request, $lat, $long)
     {
         if(!is_float($long + 0) && !is_float($lat + 0))
         {
@@ -34,7 +34,7 @@ class locationController extends Controller
         }
         else
         {
-            $results = Location::findByLongLat($long, $lat, 50.0, 111.045);
+            $results = Location::findByLongLat($lat, $long, 50.0, 111.045);
             var_dump($results);
         }
     }
