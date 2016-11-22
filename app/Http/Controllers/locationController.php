@@ -26,6 +26,19 @@ class locationController extends Controller
         ]);
     }
 
+    public function geomFetch (Request $request, $long, $lat)
+    {
+        if(!is_float($long + 0) && !is_float($lat + 0))
+        {
+            echo "Validation failed for long: $long, lat: $lat";
+        }
+        else
+        {
+            $results = Location::findByLongLat($long, $lat, 50.0, 111.045);
+            var_dump($results);
+        }
+    }
+
     public function fetch (Request $request, $id)
     {
         if(is_numeric($id))

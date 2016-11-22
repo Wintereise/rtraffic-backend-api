@@ -27,6 +27,8 @@ Route::group(['prefix' => 'v1'], function ()
         return "Hello world!";
     });
 
+    Route::get('geom/{long}/{lat}', 'locationController@geomFetch');
+
     Route::get('markup', function(Request $request){
         return json_encode([
             'name' => 'Some Area A',
