@@ -39,6 +39,11 @@ class locationController extends Controller
         }
     }
 
+    public function singleGeomFetch (Request $request, $long, $lat)
+    {
+
+    }
+
     public function fetch (Request $request, $id)
     {
         if(is_numeric($id))
@@ -48,7 +53,7 @@ class locationController extends Controller
                     ->first();
             if($data)
             {
-                var_dump($data);
+                return json_encode($data->toArray());
             }
             else
             {

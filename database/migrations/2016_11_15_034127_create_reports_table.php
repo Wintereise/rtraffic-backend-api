@@ -20,9 +20,12 @@ class CreateReportsTable extends Migration
             $table->integer('location_id')->unsigned();
 
             $table->enum('severity', [
-                'gridlock', 'smo', 'normal'
+                'gridlock', 'smo', 'normal', 'info'
             ]);
-            $table->string('data');
+
+            $table->string('comment');
+            $table->string('media');
+
             $table->timestamps();
             $table->softDeletes();
         });

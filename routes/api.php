@@ -19,23 +19,34 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function ()
 {
-    Route::post('point', 'locationController@insert');
+    Route::post('points', 'locationController@insert');
 
     Route::get('point/{id}', 'locationController@fetch');
 
-    Route::get('test', function(Request $request){
-        return "Hello world!";
-    });
+    Route::get('point/{long}/{lat}', 'locationController@singleGeomFetch');
 
-    Route::get('geom/{long}/{lat}', 'locationController@geomFetch');
+    Route::get('points/{long}/{lat}', 'locationController@geomFetch');
+
+    Route::post('reports', 'reportController@insert');
+
+    Route::get('reports/point/{id}/{history?}', 'reportController@fetchReportsByPointId');
+
+    Route::get('reports/geom/{long}/{lat}/{history?}', 'reportController@fetchReportsByPointGeom');
+
+    Route::get('reports/{id}', 'reportController@fetchSingleReportById');
+
+    Route::put('reports/{id}', 'reportController@updateReportById');
+
+    Route::delete('reports/{id}', 'reportController@deleteReportById');
+
+    Route::get('oauth', 'oAuthController@endpoint');
 
     Route::get('markup', function(Request $request){
         return json_encode([
-            'name' => 'Some Area A',
-            'from_long' => -122,
-            'to_long' => -122,
-            'from_lat' => 37,
-            'to_lat' => 37
-        ]);
+            'id' => 3,
+            'severity' => 'gridlock',
+            'comment' => 'Been stuck here for the past 20 minutes!',
+            'media' => [2, 50],
+            ]);
     });
 });
