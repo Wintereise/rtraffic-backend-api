@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class reportController extends Controller
 {
+    const CONGESTED = 32001;
+    const SLOW_BUT_MOVING = 32002;
+    const UNCONGESTED = 32003;
+
     public function fetchReportsByPointId ($id, $history = false)
     {
         if(is_numeric($id))
@@ -103,23 +107,21 @@ class reportController extends Controller
     public function insert (Request $request)
     {
         $model = new Report();
-        $data = json_decode($request->body, true);
-        if(isset($data['id']))
-        {
-            $model->location_id = $data['id'];
-        }
-        else if (isset($data['long']) && isset($data['lat']))
-        {
-            $model->location_id = 3;
-        }
-        $model->severity = $data['severity'];
-        $model->comment = $data['comment'];
-        $model->media = json_encode($data['media']);
+        $model->anonymous = $request->anonymous;
+        $model->comment = $request->comment;
+        $model->severity = $request->severity;
+        $model->polypoints = json_encode($request->polypoints);
         $model->save();
+
         return json_encode([
             'status' => 200,
             'message' => 'Record was successfully inserted.'
         ]);
+    }
+
+    public function fetchAll (Request $request)
+    {
+        return json_encode(Report::all());
     }
 
     public function updateReportById (Request $request, $id)

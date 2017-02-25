@@ -17,25 +17,17 @@ class CreateReportsTable extends Migration
         {
             $table->increments('id');
 
-            $table->integer('location_id')->unsigned();
-
-            $table->enum('severity', [
-                'gridlock', 'smo', 'normal', 'info'
-            ]);
+            $table->integer('severity');
 
             $table->string('comment');
-            $table->string('media');
+            $table->boolean('anonymous');
+
+            $table->text('polypoints');
+
+            //$table->string('media');
 
             $table->timestamps();
             $table->softDeletes();
-        });
-
-        Schema::table('reports', function (Blueprint $table)
-        {
-            //Let's define foreign keys
-            $table->foreign('location_id')
-                ->references('id')
-                ->on('locations');
         });
     }
 

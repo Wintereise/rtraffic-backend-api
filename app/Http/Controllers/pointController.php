@@ -6,20 +6,19 @@ namespace app\Http\Controllers;
 
 use App\Location;
 use App\Http\Controllers\Controller;
+use App\Point;
 use Illuminate\Http\Request;
 
-class locationController extends Controller
+class pointController extends Controller
 {
     public function insert (Request $request)
     {
-        $model = new Location();
         $json = json_decode($request->body, true);
-        $model->name = $json['name'];
-        $model->from_long = $json['from_long'];
-        $model->from_lat = $json['from_lat'];
-        $model->to_long = $json['to_long'];
-        $model->to_lat = $json['to_lat'];
-        $model->save();
+        Point::create([
+            'title' => $json['title'],
+            'info' => isset($json['info']) ? $json['info'] : NULL,
+            'location' => $json['lat'] . ', ' . $json['lng']
+        ]);
         return json_encode([
             'status' => 200,
             'message' => 'Record was successfully inserted.'
@@ -48,12 +47,18 @@ class locationController extends Controller
     {
         if(is_numeric($id))
         {
-            $data = Location::where('id', $id)
+            $data = Point::where('id', $id)
                     ->get()
                     ->first();
             if($data)
             {
-                return json_encode($data->toArray());
+                $location = $data['location'];
+                list($lat, $long) = explode(",", $location);
+                unset($data['location']);
+                $ret = $data;
+                $ret['latitude'] = $lat;
+                $ret['longitude'] = $long;
+                return json_encode($ret);
             }
             else
             {

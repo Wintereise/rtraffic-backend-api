@@ -19,13 +19,15 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function ()
 {
-    Route::post('points', 'locationController@insert');
+    Route::post('points', 'pointController@insert');
 
-    Route::get('point/{id}', 'locationController@fetch');
+    Route::get('point/{id}', 'pointController@fetch');
 
-    Route::get('point/{long}/{lat}', 'locationController@singleGeomFetch');
+    Route::get('point/{long}/{lat}', 'pointController@singleGeomFetch');
 
-    Route::get('points/{long}/{lat}', 'locationController@geomFetch');
+    Route::get('points/{long}/{lat}', 'pointController@geomFetch');
+
+    Route::get('reports/all', 'reportController@fetchAll');
 
     Route::post('reports', 'reportController@insert');
 
@@ -41,12 +43,13 @@ Route::group(['prefix' => 'v1'], function ()
 
     Route::get('oauth', 'oAuthController@endpoint');
 
-    Route::get('markup', function(Request $request){
+  /*  Route::get('markup', function(Request $request){
         return json_encode([
-            'id' => 3,
-            'severity' => 'gridlock',
-            'comment' => 'Been stuck here for the past 20 minutes!',
-            'media' => [2, 50],
+            'title' => 'Shhh, no tears!',
+            'info' => 'Only dreams now',
+            'lat' => 45.3681,
+            'lng' => 7.7681
             ]);
     });
+  */
 });

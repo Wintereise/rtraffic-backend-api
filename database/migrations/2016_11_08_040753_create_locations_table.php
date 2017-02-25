@@ -11,23 +11,21 @@ class CreateLocationsTable extends Migration
      *
      * @return void
      */
+    private $table = "points";
+
     public function up()
     {
-        Schema::create('locations', function (Blueprint $table)
+        Schema::create($this->table, function (Blueprint $table)
         {
             $table->increments('id');
 
-            $table->string('name');
-            $table->float('from_long');
-            $table->float('from_lat');
-            $table->float('to_long');
-            $table->float('to_lat');
-            $table->float('center_long');
-            $table->float('center_lat');
+            $table->string('title');
+            $table->string('info')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement("ALTER TABLE " . $this->table . " ADD location POINT");
     }
 
     /**
@@ -37,8 +35,9 @@ class CreateLocationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function (Blueprint $table) {
-            Schema::drop('locations');
+        Schema::table($this->table, function (Blueprint $table)
+        {
+            Schema::drop($this->table);
         });
     }
 }
