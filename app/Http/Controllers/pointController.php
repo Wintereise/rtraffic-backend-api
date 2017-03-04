@@ -1,11 +1,8 @@
 <?php
 
 
-namespace app\Http\Controllers;
+namespace App\Http\Controllers;
 
-
-use App\Location;
-use App\Http\Controllers\Controller;
 use App\Point;
 use Illuminate\Http\Request;
 

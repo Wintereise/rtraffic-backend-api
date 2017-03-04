@@ -4,38 +4,33 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReportsTable extends Migration
+class CreatePointsOfInterestTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
+    private $table = "poi";
+
     public function up()
     {
-        Schema::create('reports', function (Blueprint $table)
+        Schema::create($this->table, function (Blueprint $table)
         {
             $table->increments('id');
 
-            $table->integer('severity');
-
             $table->integer('user_id')->unsigned();
-
-            $table->string('comment');
-            $table->boolean('anonymous');
-
-            $table->text('polypoints');
-
-            //$table->string('media');
+            $table->integer('point_id')->unsigned();
 
             $table->timestamps();
             $table->softDeletes();
         });
-
-        Schema::table('reports', function (Blueprint $table)
+        Schema::table($this->table, function (Blueprint $table)
         {
             $table->foreign('user_id')->references('id')
-               ->on('users');
+                ->on('users');
+            $table->foreign('point_id')->references('id')
+                ->on('points');
         });
     }
 
@@ -46,8 +41,9 @@ class CreateReportsTable extends Migration
      */
     public function down()
     {
-        Schema::table('reports', function (Blueprint $table) {
-            Schema::drop('reports');
+        Schema::table($this->table, function (Blueprint $table)
+        {
+            Schema::drop($this->table);
         });
     }
 }

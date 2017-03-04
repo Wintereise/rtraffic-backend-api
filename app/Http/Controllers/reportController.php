@@ -108,6 +108,7 @@ class reportController extends Controller
     {
         $model = new Report();
         $model->anonymous = $request->anonymous;
+        $model->user_id = $request->user_id;
         $model->comment = $request->comment;
         $model->severity = $request->severity;
         $model->polypoints = json_encode($request->polypoints);

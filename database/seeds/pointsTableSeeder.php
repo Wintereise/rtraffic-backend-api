@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use App\Point;
 
@@ -13,6 +14,8 @@ class pointsTableSeeder extends Seeder
     public function run()
     {
         DB::table('points')->delete();
+        DB::table('users')->delete();
+        User::create(['name' => 'Paul S.', 'email' => 'contact@winterei.se', 'password' => 'test', 'oauth_uid' => 'test', 'oauth_provider' => 'google']);
         Point::create(['title' => 'Airport Road (Dhaka-Mymensingh Hwy) and Kemal Ataturk Avenue', 'location' => '23.794403, 90.401070']);
         Point::create(['title' => 'Airport Road Roundabout', 'location' => '23.850420, 90.408418']);
         Point::create(['title' => 'Bangla Motor Mor', 'location' => '23.746015, 90.394651']);

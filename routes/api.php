@@ -27,7 +27,7 @@ Route::group(['prefix' => 'v1'], function ()
 
     Route::get('points/{long}/{lat}', 'pointController@geomFetch');
 
-    Route::get('reports/all', 'reportController@fetchAll');
+    Route::get('reports', 'reportController@fetchAll');
 
     Route::post('reports', 'reportController@insert');
 
@@ -41,15 +41,18 @@ Route::group(['prefix' => 'v1'], function ()
 
     Route::delete('reports/{id}', 'reportController@deleteReportById');
 
+    Route::get('excluded-regions', 'excludedRegionsController@fetch');
+    Route::post('excluded-regions', 'excludedRegionsController@insert');
+    Route::delete('excluded-regions/{id}', 'excludedRegionsController@delete');
+
     Route::get('oauth', 'oAuthController@endpoint');
 
-  /*  Route::get('markup', function(Request $request){
-        return json_encode([
-            'title' => 'Shhh, no tears!',
-            'info' => 'Only dreams now',
-            'lat' => 45.3681,
-            'lng' => 7.7681
-            ]);
+  Route::get('markup', function(Request $request){
+      return json_encode([
+          'status' => 200,
+          'message' => 'Record was successfully inserted.',
+          'data' => [ 'id' => 1 ]
+      ]);
     });
-  */
+
 });
