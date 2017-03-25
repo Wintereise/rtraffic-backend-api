@@ -36,8 +36,10 @@ class Point extends Model
         return parent::newQuery($excludeDeleted)->addSelect('*', DB::raw($raw));
     }
 
-    public function scopeDistance ($query, $distance, $location)
+    public function scopeDistance ($query, $location, $distance)
     {
-        return $query->whereRaw('ST_DISTANCE(location, POINT(' . $location . ')) < ' . $distance);
+       // echo $query->toSQL();
+
+        return $query->whereRaw('ST_DISTANCE_SPHERE(location, POINT(' . $location . ')) < ' . $distance);
     }
 }

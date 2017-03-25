@@ -19,13 +19,10 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function ()
 {
-    Route::post('points', 'pointController@insert');
-
-    Route::get('point/{id}', 'pointController@fetch');
-
-    Route::get('point/{long}/{lat}', 'pointController@singleGeomFetch');
-
-    Route::get('points/{long}/{lat}', 'pointController@geomFetch');
+    Route::get('points', 'pointController@fetchAll');
+    Route::get('points/{id}', 'pointController@fetch');
+    Route::get('points/{long}/{lat}', 'pointController@singleGeomFetch');
+    Route::get('points/{long}/{lat}/{distance?}', 'pointController@geomFetch');
 
     Route::get('reports', 'reportController@fetchAll');
 
@@ -45,9 +42,15 @@ Route::group(['prefix' => 'v1'], function ()
     Route::post('excluded-regions', 'excludedRegionsController@insert');
     Route::delete('excluded-regions/{id}', 'excludedRegionsController@delete');
 
-    Route::get('oauth', 'oAuthController@endpoint');
+    Route::get('poi', 'poiController@fetch');
+    Route::post('poi', 'poiController@insert');
+    Route::delete('poi/{id}', 'poiController@delete');
 
-  Route::get('markup', function(Request $request){
+    Route::post('oauth', 'oAuthController@endpoint');
+
+    Route::post('firebase-update', 'firebaseController@tokenUpdate');
+
+    Route::get('markup', function(Request $request){
       return json_encode([
           'status' => 200,
           'message' => 'Record was successfully inserted.',

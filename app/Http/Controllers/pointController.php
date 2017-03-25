@@ -8,36 +8,51 @@ use Illuminate\Http\Request;
 
 class pointController extends Controller
 {
-    public function insert (Request $request)
-    {
-        $json = json_decode($request->body, true);
-        Point::create([
-            'title' => $json['title'],
-            'info' => isset($json['info']) ? $json['info'] : NULL,
-            'location' => $json['lat'] . ', ' . $json['lng']
-        ]);
-        return json_encode([
-            'status' => 200,
-            'message' => 'Record was successfully inserted.'
-        ]);
-    }
 
     public function geomFetch (Request $request, $lat, $long)
     {
         if(!is_float($long + 0) && !is_float($lat + 0))
         {
-            echo "Validation failed for long: $long, lat: $lat";
+            return response()->json([
+                'status' => 400,
+                'message' => 'You have sent a malformed request.'
+            ], 400);
         }
         else
         {
-            $results = Location::findByLongLat($lat, $long, 50.0, 111.045);
-            var_dump($results);
+            $location = sprintf("%s, %s", $lat, $long);
+            $distance = $request->distance ? '5' : $request->distance;
+
+            $results = Point::distance($location, $distance)->get();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Request successful!',
+                'data' => $results
+            ]);
         }
     }
 
     public function singleGeomFetch (Request $request, $long, $lat)
     {
 
+    }
+
+    public function fetchAll (Request $request)
+    {
+        $res = [];
+        foreach(Point::all() as $point)
+        {
+            list($lat, $long) = explode(",", $point['location']);
+            $res[] = [
+                'id' => $point['id'],
+                'title' => $point['title'],
+                'latitude' => $lat,
+                'longitude' => $long,
+                'info' => $point['info']
+            ];
+        };
+        return response()->json($res);
     }
 
     public function fetch (Request $request, $id)

@@ -16,17 +16,21 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table)
         {
             $table->increments('id');
+
             $table->string('name');
+
             $table->string('email');
-            $table->index('email');
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-            $table->string('oauth_uid');
-            $table->unique('oauth_uid');
+            $table->unique('email');
+
+            $table->string('oauth_uid', 2048);
+
             $table->enum('oauth_provider', [
                 'google', 'facebook'
             ]);
+
+            $table->string("firebase_id", 4096);
+
+            $table->timestamps();
             $table->softDeletes();
         });
     }
