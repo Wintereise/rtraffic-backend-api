@@ -17,4 +17,9 @@ class User extends Model
         'name', 'email', 'oauth_uid', 'oauth_provider', 'firebase_id'
     ];
 
+    public function pointsOfInterest ()
+    {
+        return $this->hasMany('App\PointOfInterest', 'user_id', 'id');
+    }
+
 }

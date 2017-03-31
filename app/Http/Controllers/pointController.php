@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 class pointController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('rauth');
+    }
+
     public function geomFetch (Request $request, $lat, $long)
     {
         if(!is_float($long + 0) && !is_float($lat + 0))
@@ -41,7 +46,9 @@ class pointController extends Controller
     public function fetchAll (Request $request)
     {
         $res = [];
-        foreach(Point::all() as $point)
+        $data = Point::all();
+
+        foreach($data as $point)
         {
             list($lat, $long) = explode(",", $point['location']);
             $res[] = [
@@ -52,7 +59,9 @@ class pointController extends Controller
                 'info' => $point['info']
             ];
         };
-        return response()->json($res);
+
+        $status = count($data) > 0 ? 200 : 404;
+        return response()->json($res, $status);
     }
 
     public function fetch (Request $request, $id)
@@ -70,24 +79,21 @@ class pointController extends Controller
                 $ret = $data;
                 $ret['latitude'] = $lat;
                 $ret['longitude'] = $long;
-                return json_encode($ret);
+
+                return response()->json($ret);
             }
             else
             {
-                return response()->json(
-                    [
+                return response()->json([
                         'status' => 404,
                         'message' => 'The record you\'re looking for could not be found.'
-                    ]
-                );
+                    ], 404);
             }
         }
         else
-            return response()->json(
-                [
+            return response()->json([
                     'status' => 400,
                     'message' => 'You\'ve sent a malformed HTTP request.'
-                ]
-            );
+                ], 400);
     }
 }

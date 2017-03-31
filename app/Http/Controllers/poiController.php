@@ -38,34 +38,27 @@ class poiController extends Controller
         ]);
     }
 
-    public function delete (Request $request, $id)
+    public function delete (Request $request, $point_id)
     {
+        $user_id = $request->RTRAFFIC_INTERNAL_UID;
+
         try
         {
-            $poi = PointOfInterest::findOrFail($id);
+            $poi = PointOfInterest::where('point_id', $point_id)
+                ->where('user_id', $user_id)
+                ->firstOrFail();
         }
         catch (ModelNotFoundException $exception)
         {
-            return response()->json([
-                'status' => 404,
-                'message' => 'You tried to remove a resource that does not exist.'
-            ], 404);
+            return responseHandler::handle(404);
         }
-
-        $user_id = $request->RTRAFFIC_INTERNAL_UID;
 
         if ($poi->user_id == $user_id)
         {
-            PointOfInterest::destroy($id);
-            return response()->json([
-                'status' => 200,
-                'message' => 'Record was successfully deleted.'
-            ]);
+            $poi->delete();
+            return responseHandler::handle(200);
         }
         else
-            return response()->json([
-                'status' => 403,
-                'message' => 'You tried to remove a resource that does not belong to you.'
-            ], 403);
+            return responseHandler::handle(403);
     }
 }

@@ -6,10 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.3.*",
         "barryvdh/laravel-ide-helper": "^2.2",
         "nesbot/carbon": "^1.21",
-        "google/apiclient": "^2.1"
+        "google/apiclient": "^2.1",
+        "paragraph1/php-fcm": "^0.7.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

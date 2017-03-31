@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -50,12 +49,6 @@ Route::group(['prefix' => 'v1'], function ()
 
     Route::post('firebase-update', 'firebaseController@tokenUpdate');
 
-    Route::get('markup', function(Request $request){
-      return json_encode([
-          'status' => 200,
-          'message' => 'Record was successfully inserted.',
-          'data' => [ 'id' => 1 ]
-      ]);
-    });
+    Route::get('test', 'testController@test');
 
 });

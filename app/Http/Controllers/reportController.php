@@ -1,12 +1,12 @@
 <?php
 
 
-namespace app\Http\Controllers;
+namespace App\Http\Controllers;
 
 
 use App\Location;
 use App\Report;
-use App\Http\Controllers\Controller;
+use App\Task;
 use Illuminate\Http\Request;
 
 class reportController extends Controller
@@ -15,186 +15,106 @@ class reportController extends Controller
     const SLOW_BUT_MOVING = 32002;
     const UNCONGESTED = 32003;
 
-    public function fetchReportsByPointId ($id, $history = false)
+    public function __construct()
     {
-        if(is_numeric($id))
-        {
-            $data = Report::where('location_id', $id)
-                ->get();
-            if($data)
-            {
-                return json_encode($data->toArray());
-            }
-            else
-            {
-                return response()->json(
-                    [
-                        'status' => 404,
-                        'message' => 'The record you\'re looking for could not be found.'
-                    ]
-                );
-            }
-        }
-        else
-            return response()->json(
-                [
-                    'status' => 400,
-                    'message' => 'You\'ve sent a malformed HTTP request.'
-                ]
-            );
+        $this->middleware('rauth');
     }
 
-    public function fetchSingleReportById ($id)
+    public function fetchReportsByPointId($id, $history = false)
     {
-        if(is_numeric($id))
+
+    }
+
+    public function fetchSingleReportById($id)
+    {
+        if (is_numeric($id))
         {
             $data = Report::where('id', $id)
                 ->get()
                 ->first();
-            if($data)
-            {
-                return json_encode($data->toArray());
-            }
+            if ($data)
+                return response()->json($data);
             else
-            {
-                return response()->json(
-                    [
-                        'status' => 404,
-                        'message' => 'The record you\'re looking for could not be found.'
-                    ]
-                );
-            }
+                return responseHandler::handle(404);
         }
         else
-            return response()->json(
-                [
-                    'status' => 400,
-                    'message' => 'You\'ve sent a malformed HTTP request.'
-                ]
-            );
+            return responseHandler::handle(400);
     }
 
-    public function fetchReportsByPointGeom ($long, $lat, $history)
+    public function fetchReportsByPointGeom($long, $lat, $history)
     {
-        if($long)
-        {
-            $data = Report::where('location_id', 3)
-                ->get()
-                ->first();
-            if($data)
-            {
-                return json_encode($data->toArray());
-            }
-            else
-            {
-                return response()->json(
-                    [
-                        'status' => 404,
-                        'message' => 'The record you\'re looking for could not be found.'
-                    ]
-                );
-            }
-        }
-        else
-            return response()->json(
-                [
-                    'status' => 400,
-                    'message' => 'You\'ve sent a malformed HTTP request.'
-                ]
-            );
     }
 
-    public function insert (Request $request)
+    public function insert(Request $request)
     {
+        $user = $request->RTRAFFIC_INTERNAL_USER;
+
         $model = new Report();
         $model->anonymous = $request->anonymous;
-        $model->user_id = $request->user_id;
+        $model->user_id = $user->id;
         $model->comment = $request->comment;
         $model->severity = $request->severity;
         $model->polypoints = json_encode($request->polypoints);
         $model->save();
 
-        return json_encode([
-            'status' => 200,
-            'message' => 'Record was successfully inserted.'
-        ]);
+        $task = new Task();
+        $task->type = 'notify';
+        $task->resource_id = $model->id;
+
+        $task->save();
+
+        return responseHandler::handle(200);
     }
 
-    public function fetchAll (Request $request)
+    public function fetchAll(Request $request)
     {
-        return json_encode(Report::all());
+        $data = Report::InHours($request->has('history') ? $request->history : 1);
+        $status = count($data) > 0 ? 200 : 404;
+
+        return response()->json($data, $status);
     }
 
-    public function updateReportById (Request $request, $id)
+    public function updateReportById(Request $request, $id)
     {
-        if(is_numeric($id))
+        if (is_numeric($id))
         {
             $data = Report::where('id', $id)
                 ->get()
                 ->first();
-            if($data)
+            if ($data)
             {
                 $new = json_decode($request->body, true);
                 $data->location_id = $new['id'];
                 $data->severity = $new['severity'];
                 $data->media = $new['media'];
                 $data->save();
-                return json_encode([
-                    'status' => 200,
-                    'message' => 'Record was successfully updated.'
-                ]);
+
+                return responseHandler::handle(200);
             }
             else
-            {
-                return response()->json(
-                    [
-                        'status' => 404,
-                        'message' => 'The record you\'re looking for could not be found.'
-                    ]
-                );
-            }
+                return responseHandler::handle(404);
         }
         else
-            return response()->json(
-                [
-                    'status' => 400,
-                    'message' => 'You\'ve sent a malformed HTTP request.'
-                ]
-            );
+            return responseHandler::handle(400);
     }
 
-    public function deleteReport ($id)
+    public function deleteReport($id)
     {
-        if(is_numeric($id))
+        if (is_numeric($id))
         {
-        $data = Report::where('id', $id)
-            ->get()
-            ->first();
-        if($data)
-        {
-            $data->delete();
-            return json_encode([
-                'status' => 200,
-                'message' => 'Record was successfully deleted.'
-            ]);
+            $data = Report::where('id', $id)
+                ->get()
+                ->first();
+            if ($data)
+            {
+                $data->delete();
+                return responseHandler::handle(200);
+            }
+            else
+                return responseHandler::handle(404);
         }
         else
-        {
-            return response()->json(
-                [
-                    'status' => 404,
-                    'message' => 'The record you\'re looking for could not be found.'
-                ]
-            );
-        }
-    }
-    else
-        return response()->json(
-            [
-                'status' => 400,
-                'message' => 'You\'ve sent a malformed HTTP request.'
-            ]
-        );
+            return responseHandler::handle(400);
     }
 
 }

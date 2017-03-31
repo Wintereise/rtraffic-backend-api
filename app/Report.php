@@ -3,6 +3,7 @@
 
 namespace app;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -16,5 +17,10 @@ class Report extends Model
     public function getPolypointsAttribute ($value)
     {
         return json_decode($value);
+    }
+
+    public function scopeInHours ($query, $hours)
+    {
+        return $query->where('updated_at', '>=', Carbon::now()->subHours($hours))->get();
     }
 }
