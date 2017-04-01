@@ -11,10 +11,6 @@ use Illuminate\Http\Request;
 
 class reportController extends Controller
 {
-    const CONGESTED = 32001;
-    const SLOW_BUT_MOVING = 32002;
-    const UNCONGESTED = 32003;
-
     public function __construct()
     {
         $this->middleware('rauth');

@@ -34,7 +34,7 @@ class Utility
             case self::UNCONGESTED:
                 return "uncongested";
         }
+        return "indeterminate";
     }
-
 
 }

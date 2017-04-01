@@ -5,7 +5,6 @@ namespace app;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Report extends Model
 {
