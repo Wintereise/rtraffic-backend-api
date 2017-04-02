@@ -95,6 +95,7 @@ class SendNotifications extends Command
                     try
                     {
                         $user = User::findOrFail($interestedParty->user_id);
+                        $reportUser = User::findOrFail($report->user_id);
                     }
                     catch (ModelNotFoundException $exception)
                     {
@@ -105,7 +106,7 @@ class SendNotifications extends Command
                     if ($user->id == $report->user_id)
                         continue;
 
-                    $person = $report->anonymous == true ? 'Anonymous' : $user->name;
+                    $person = $report->anonymous == true ? 'Anonymous' : $reportUser->name;
 
                     $messageTemplate = "%s has reported %s as %s";
                     $messageBody = sprintf($messageTemplate, $person, $match->title, Utility::resolveSeverity($report->severity));
