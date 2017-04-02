@@ -108,10 +108,13 @@ class SendNotifications extends Command
 
                     $person = $report->anonymous == true ? 'Anonymous' : $reportUser->name;
 
-                    $messageTemplate = "%s has reported %s as %s";
-                    $messageBody = sprintf($messageTemplate, $person, $match->title, Utility::resolveSeverity($report->severity));
+                    $messageTemplate = "%s was reported by %s";
+                    $titleTemplate = 'rTraffic alert - %s';
+                    $titleBody = sprintf($titleTemplate, Utility::resolveSeverity($report->severity));
 
-                    $note = new Notification('Traffic alert!', $messageBody);
+                    $messageBody = sprintf($messageTemplate, $match->title, $person);
+
+                    $note = new Notification($titleBody, $messageBody);
 
                     $note->setColor(env('FCM_NOTIFICATION_COLOR', '#ffffff'))
                         ->setBadge(env('FCM_NOTIFICATION_BADGE', 1))
