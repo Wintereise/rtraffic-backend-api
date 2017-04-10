@@ -41,7 +41,10 @@ class oAuthController extends Controller
             }
 
             $user->oauth_uid = $token;
-            $user->firebase_id = $firebaseToken;
+
+            if ($user->firebase_id != "")
+                $user->firebase_id = $firebaseToken;
+
             $user->save();
 
             $res = json_encode([
