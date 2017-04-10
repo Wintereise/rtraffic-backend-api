@@ -17,12 +17,15 @@ class firebaseController extends Controller
 
         $user = $request->RTRAFFIC_INTERNAL_USER;
 
-        $user->firebase_id = $token;
-        $user->save();
+        if ($token != null && $token != "")
+        {
+            $user->firebase_id = $token;
+            $user->save();
+            $code = 200;
+        }
+        else
+            $code = 400;
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Your firebase token has been successfully updated.'
-        ]);
+        return responseHandler::handle($code);
     }
 }
